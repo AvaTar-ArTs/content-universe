@@ -3,6 +3,7 @@ from __future__ import annotations
 from ..graph import GraphEdge
 from ..models import CreativeEntity, EdgeKind, EntityKind, EntityRef
 from ..universe import ContentUniverse
+from .design_asset import StructuredDesignAsset
 from .evaluation import ApprovalRecord, EvaluationRecord
 from .genome import ReferenceGenome
 from .prompt import PromptManifest
@@ -84,6 +85,39 @@ def persist_scene_graph(
                 },
             )
         )
+    return entity
+
+
+def persist_structured_design_asset(
+    universe: ContentUniverse,
+    design: StructuredDesignAsset,
+    *,
+    source: str = "creativeos",
+) -> CreativeEntity:
+    entity = _ingest_contract_entity(
+        universe,
+        entity_id=design.design_id,
+        kind=EntityKind.STRUCTURED_DESIGN_ASSET,
+        payload=design.to_dict(),
+        source=source,
+    )
+    if design.base_asset is not None:
+        universe.graph.add(GraphEdge(entity.ref, design.base_asset, EdgeKind.USES, {"role": "base_asset"}))
+    if design.scene_graph_id:
+        universe.graph.add(
+            GraphEdge(entity.ref, EntityRef(EntityKind.SCENE_GRAPH, design.scene_graph_id), EdgeKind.USES, {"role": "scene_graph"})
+        )
+    if design.prompt_manifest_id:
+        prompt_ref = EntityRef(EntityKind.PROMPT_MANIFEST, design.prompt_manifest_id)
+        universe.graph.add(GraphEdge(prompt_ref, entity.ref, EdgeKind.RENDERED_AS))
+    for style_id in design.style_dna_ids:
+        universe.graph.add(
+            GraphEdge(entity.ref, EntityRef(EntityKind.STYLE_DNA, style_id), EdgeKind.USES, {"role": "style_dna"})
+        )
+    for vector_ref in design.vector_assets:
+        universe.graph.add(GraphEdge(entity.ref, vector_ref, EdgeKind.USES, {"role": "vector_asset"}))
+    if design.parent_design is not None:
+        universe.graph.add(GraphEdge(entity.ref, design.parent_design, EdgeKind.DERIVED_FROM))
     return entity
 
 
