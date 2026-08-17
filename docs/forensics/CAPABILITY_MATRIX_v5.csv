@@ -1,0 +1,16 @@
+Concern,Current Content Universe,CreativeOS v2 / Market,Creator Camp,My Creators,Canonical owner / bridge,Status v5
+Durable identity/provenance,"Strong: graph, SQLite, evidence, edge IDs",Consumes/emits,Needs rights/release evidence,Needs render/training provenance,Content Universe,implemented foundation
+Creative authoring,"PromptBuilder, SceneGraph, PromptLineage, StyleDNA, ReferenceGenome, StructuredDesignAsset",Historical broader UI/federation/docs,Scene/production contracts,Shot schemas downstream,CreativeOS on Content Universe,contract layer strong; live backends partial
+Semantic operations,Typed source-cardinality + mock/result invariants,Historical semantic tools,Provider-invariant production rules,RenderPlan backend semantics,CreativeOS,implemented contracts
+Provider routing/live execution,Registry/backend/dialect contracts; Ideogram catalog; broad live transport missing,Router/federation/provider breadth stronger,Replaceable provider rule,Concrete local backend seam,CreativeOS ProviderRegistry + plugins,partial
+Ideogram recovery,Strong HAR/HTML/profile/reference/model/browser collectors,Broader provider research/state surface,N/A,N/A,Content Universe recovery + iDeoMine runtime,strong recovery; live bridge missing
+Suno/audio,Recovery adapters + heritage,Multi-backend strategy/reference catalog,N/A,Local production patterns transferable,Suno subsystem under CreativeOS/Content Universe,recovery strong; live multi-backend missing
+Canon/IP/rights,Generic entities/provenance only,Identity/genome concepts,Strong canon/rights/adaptation workflows,License discipline for local assets,Creator Camp governance + Content Universe records,bridge schemas missing
+Local production/training,No concrete render backend,Local-workflow category/reference,Not owner,Strong ShotManifest/RenderPlan/ComfyUI/training,My Creators backend plugin into CreativeOS,executable adjacent subsystem
+Evaluation/approval,"Typed records, evaluator engines pending",Historical intent/fixtures,Release/audience gates,Shot/style/character evaluation protocol,CreativeOS evaluation + Creator Camp release gate,"records yes, engines no"
+Jobs/checkpoints,No robust async runtime,ProviderJob concepts,Render checkpoints,Backend result/failure metadata,Shared ProviderJob + RenderCheckpoint,missing canonical runtime
+MCP,Memory/query MCP,Historical semantic/federated/action MCP,No MCP snapshot,No MCP snapshot,Memory MCP + Action MCP + governance/local adapters,memory implemented; action missing
+Evidence/trust,Provenance ledger,Provider evidence/role taxonomy stronger,Rights/release evidence,License/training provenance,Content Universe evidence + provider registry trust,provider trust registry incomplete
+Forensic memory,GitHub docs include audits but not full bundle lineage,Historical sources,Adjacent snapshot,Adjacent snapshot,Canonical forensic bundle v5,implemented in product
+Unresolved external sources,No runtime model,No runtime model,N/A,N/A,Forensic EvidenceStatus/locator ledger,v5 protocol implemented; runtime model deferred
+Packaging/reproducibility,Project packaging exists; forensic release not CI-native,Prior editions,Standalone repo,Standalone repo,Canonical forensic packaging protocol,v5 implemented outside repo
