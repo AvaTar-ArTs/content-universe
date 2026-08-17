@@ -8,7 +8,30 @@
     "entity_id": {"type": "string", "minLength": 1},
     "kind": {
       "type": "string",
-      "enum": ["project", "series", "story", "character", "chapter", "scene", "track", "image", "video", "prompt", "publication", "product", "campaign", "file"]
+      "enum": [
+        "project",
+        "series",
+        "story",
+        "character",
+        "chapter",
+        "scene",
+        "track",
+        "image",
+        "video",
+        "prompt",
+        "prompt_manifest",
+        "scene_graph",
+        "style_dna",
+        "reference_genome",
+        "evaluation",
+        "approval",
+        "workflow",
+        "provider_job",
+        "publication",
+        "product",
+        "campaign",
+        "file"
+      ]
     },
     "title": {"type": ["string", "null"]},
     "description": {"type": ["string", "null"]},
