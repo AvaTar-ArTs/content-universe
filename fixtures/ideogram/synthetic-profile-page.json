@@ -1,0 +1,37 @@
+{
+  "results": [
+    {
+      "request_id": "fixture-request-001",
+      "request_type": "TEXT_TO_IMAGE",
+      "user_prompt": "A synthetic poster fixture",
+      "user_negative_prompt": "",
+      "responses": [
+        {
+          "response_id": "fixture-response-001",
+          "response_index": 0,
+          "prompt": "{\"high_level_description\":\"Synthetic fixture\",\"compositional_deconstruction\":{\"background\":\"black\",\"elements\":[{\"type\":\"text\",\"text\":\"FIXTURE\",\"desc\":\"bold headline\"}]}}",
+          "format": "PNG",
+          "num_likes": 0,
+          "private": false
+        }
+      ],
+      "seed": 42,
+      "model_version": "V_FIXTURE",
+      "model_uri": "model/fixture/version/0",
+      "width": 1024,
+      "height": 1024,
+      "aspect_ratio": "1:1",
+      "image_resolution": "1K",
+      "style_expert": "AUTO",
+      "character_reference_collection_ids": [],
+      "product_reference_collection_ids": [],
+      "style_reference_collection_ids": [],
+      "references": {},
+      "caption": "Synthetic fixture only",
+      "private": false,
+      "is_completed": true,
+      "is_errored": false
+    }
+  ],
+  "next_cursor": "fixture-next-cursor"
+}

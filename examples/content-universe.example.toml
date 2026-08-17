@@ -1,0 +1,40 @@
+[universe]
+name = "Example Cross-Media Universe"
+description = "Synthetic example showing how project-level creative entities connect to harvested artifacts."
+
+[[entities]]
+id = "example-series"
+kind = "series"
+title = "Example Series"
+tags = ["manga", "music", "visual-development"]
+
+[[entities]]
+id = "example-hero"
+kind = "character"
+title = "Example Hero"
+aliases = ["The Example"]
+
+[[entities]]
+id = "example-theme"
+kind = "track"
+title = "Example Theme"
+
+[[entities]]
+id = "example-cover"
+kind = "image"
+title = "Example Cover"
+
+[[relationships]]
+source = "series:example-series"
+kind = "features"
+target = "character:example-hero"
+
+[[relationships]]
+source = "track:example-theme"
+kind = "soundtrack_for"
+target = "series:example-series"
+
+[[relationships]]
+source = "image:example-cover"
+kind = "cover_for"
+target = "series:example-series"

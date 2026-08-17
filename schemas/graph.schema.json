@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://avatararts.org/schemas/content-universe-graph.schema.json",
+  "title": "Content Universe Graph",
+  "type": "object",
+  "required": ["edges"],
+  "properties": {
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "target", "kind", "metadata"],
+        "properties": {
+          "source": {"type": "string", "pattern": "^[a-z_]+:.+$"},
+          "target": {"type": "string", "pattern": "^[a-z_]+:.+$"},
+          "kind": {"type": "string"},
+          "metadata": {"type": "object"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://avatararts.org/schemas/content-universe-asset-manifest.schema.json",
+  "title": "Content Universe Asset Manifest",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["response_id", "downloaded", "metadata"],
+    "properties": {
+      "response_id": {"type": "string", "minLength": 1},
+      "request_id": {"type": ["string", "null"]},
+      "url": {"type": ["string", "null"]},
+      "representation": {"type": ["string", "null"]},
+      "resolution": {"type": ["string", "null"]},
+      "filename": {"type": ["string", "null"]},
+      "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+      "downloaded": {"type": "boolean"},
+      "metadata": {"type": "object"}
+    }
+  }
+}

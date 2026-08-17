@@ -1,0 +1,15 @@
+{
+  "songs": [
+    {
+      "id": "fixture-suno-song-001",
+      "title": "Synthetic Song",
+      "audioUrl": "https://example.invalid/audio.mp3",
+      "imageUrl": "https://example.invalid/cover.jpg",
+      "prompt": "synthetic music fixture",
+      "lyrics": "fixture lyrics",
+      "tags": "fixture, test",
+      "description": "Synthetic Suno-shaped export used only for tests.",
+      "likes": 0
+    }
+  ]
+}

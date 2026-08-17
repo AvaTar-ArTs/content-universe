@@ -1,0 +1,24 @@
+{
+  "models": [
+    {
+      "model_id": "fixture-model",
+      "display_name": "Fixture Model",
+      "model_uri": "model/fixture/version/0",
+      "access_level": "PUBLIC",
+      "supports_inpaint": true,
+      "supports_canvas": true,
+      "supports_color_palette": true,
+      "supports_negative_prompt": true,
+      "supports_rendering_speed": true,
+      "supports_tiling": false,
+      "supports_style_reference": true,
+      "supports_custom_aspect_ratio": true,
+      "supports_character_reference": true,
+      "supports_product_reference": true,
+      "supports_external_api": false,
+      "is_custom_model": false,
+      "is_primary_model": true,
+      "available_resolution_tiers": ["1K", "2K"]
+    }
+  ]
+}

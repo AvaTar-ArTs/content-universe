@@ -4,19 +4,37 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "content-universe"
-version = "0.1.0"
-description = "Provenance-aware creative harvesting and catalog core"
+version = "0.3.0"
+description = "Provenance-aware creative harvesting, recovery, lineage, and catalog infrastructure"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [{name = "AvaTar-ArTs"}]
+keywords = ["creative-automation", "ideogram", "suno", "mcp", "provenance", "har", "content-catalog"]
 dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+mcp = ["mcp>=1.0"]
+tui = ["textual>=0.80"]
+all = ["mcp>=1.0", "textual>=0.80"]
 
 [project.scripts]
 content-universe = "content_universe.cli:main"
+content-universe-mcp = "content_universe.mcp_server:main"
+content-universe-tui = "content_universe.tui:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F"]
+ignore = ["E501"]

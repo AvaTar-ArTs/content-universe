@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://avatararts.org/schemas/content-universe-generation.schema.json",
+  "title": "Content Universe Generation",
+  "type": "object",
+  "required": ["request_id", "responses", "sources"],
+  "properties": {
+    "request_id": {"type": "string", "minLength": 1},
+    "request_type": {"type": ["string", "null"]},
+    "user_prompt": {"type": ["string", "null"]},
+    "user_negative_prompt": {"type": ["string", "null"]},
+    "caption": {"type": ["string", "null"]},
+    "seed": {"type": ["integer", "null"]},
+    "model_version": {"type": ["string", "null"]},
+    "model_uri": {"type": ["string", "null"]},
+    "width": {"type": ["integer", "null"]},
+    "height": {"type": ["integer", "null"]},
+    "aspect_ratio": {"type": ["string", "null"]},
+    "image_resolution": {"type": ["string", "null"]},
+    "style_expert": {"type": ["string", "null"]},
+    "references": {"type": "object"},
+    "responses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["response_id"],
+        "properties": {
+          "response_id": {"type": "string", "minLength": 1},
+          "response_index": {"type": ["integer", "null"]},
+          "asset_url": {"type": ["string", "null"]},
+          "prompt": {},
+          "likes": {"type": ["integer", "null"]},
+          "private": {"type": ["boolean", "null"]}
+        }
+      }
+    },
+    "sources": {"type": "array", "items": {"type": "string"}}
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://avatararts.org/schemas/content-universe-creative-entity.schema.json",
+  "title": "Content Universe Creative Entity",
+  "type": "object",
+  "required": ["entity_id", "kind", "aliases", "tags", "metadata", "sources"],
+  "properties": {
+    "entity_id": {"type": "string", "minLength": 1},
+    "kind": {
+      "type": "string",
+      "enum": ["project", "series", "story", "character", "chapter", "scene", "track", "image", "video", "prompt", "publication", "product", "campaign", "file"]
+    },
+    "title": {"type": ["string", "null"]},
+    "description": {"type": ["string", "null"]},
+    "aliases": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "tags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "metadata": {"type": "object"},
+    "sources": {"type": "array", "items": {"type": "string"}}
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://avatararts.org/schemas/content-universe-provenance.schema.json",
+  "title": "Content Universe Provenance Ledger",
+  "type": "object",
+  "additionalProperties": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "required": ["source", "observed_at", "metadata"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "observed_at": {"type": "string"},
+        "locator": {"type": ["string", "null"]},
+        "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "metadata": {"type": "object"}
+      }
+    }
+  }
+}
