@@ -1,0 +1,72 @@
+[
+  {
+    "id": "GAP-01",
+    "gap": "RightsRecord",
+    "why": "Creator Camp requires asset/entity/output rights status across media, territories, languages, terms and adaptation scopes. Content Universe provenance alone cannot answer clearance."
+  },
+  {
+    "id": "GAP-02",
+    "gap": "EditionReleaseRecord",
+    "why": "Master canon, public serial and commercial edition must be distinct versioned artifacts with release evidence and exact asset membership."
+  },
+  {
+    "id": "GAP-03",
+    "gap": "SceneContract",
+    "why": "Creator Camp scene purpose/reader-state/required evidence should compile into CreativeOS PromptManifest/SceneGraph and then concrete ShotManifest(s)."
+  },
+  {
+    "id": "GAP-04",
+    "gap": "ShotManifest bridge",
+    "why": "My Creators has a concrete shot contract; CreativeOS has SceneGraph. A deterministic bridge prevents duplicate story/render schemas."
+  },
+  {
+    "id": "GAP-05",
+    "gap": "RenderCheckpoint / ProviderJob",
+    "why": "Long generation jobs need resumable stage/unit/output/attempt/error state and partial-failure semantics."
+  },
+  {
+    "id": "GAP-06",
+    "gap": "LicenseManifest",
+    "why": "Local model/checkpoint/LoRA/dataset/custom-node licenses need machine-enforced production gates, not only provenance notes."
+  },
+  {
+    "id": "GAP-07",
+    "gap": "Local provider plugin",
+    "why": "My Creators DryRunBackend and future ComfyUI adapter should implement CreativeOS ProviderBackend rather than invent a second runtime API."
+  },
+  {
+    "id": "GAP-08",
+    "gap": "Cross-repo shared schema package",
+    "why": "IDs, enums and versioned contracts must be importable by all three repos without source copying."
+  },
+  {
+    "id": "GAP-09",
+    "gap": "Release/adaptation graph vocabulary",
+    "why": "Option/license/assignment, medium, territory, term, adaptation and release relationships need explicit graph semantics."
+  },
+  {
+    "id": "GAP-10",
+    "gap": "Audience/release feedback loop",
+    "why": "Creator Camp treats audience/commercial/industry evidence as progression stages; Content Universe should ingest these as evidence feeding project decisions."
+  },
+  {
+    "id": "GAP-11",
+    "gap": "EvidenceStatus / unresolved-source record",
+    "why": "The forensic system must represent unavailable external evidence without inventing content and later attach retrieved bodies to the same checkpoint."
+  },
+  {
+    "id": "GAP-12",
+    "gap": "Canonical forensic release automation",
+    "why": "The v5 master/groups protocol is reproducible in the artifact build, but not yet a GitHub CI/release job with signed/tagged outputs."
+  },
+  {
+    "id": "GAP-13",
+    "gap": "Source-to-claim provenance graph",
+    "why": "Source authority is documented, but claims/capabilities are not yet machine-linked to exact source artifacts/savepoints/commits."
+  },
+  {
+    "id": "GAP-14",
+    "gap": "Cross-repo versioned contract package",
+    "why": "Creator Camp, CreativeOS/Content Universe, and My Creators still need one importable versioned schema/identifier package to avoid contract copying."
+  }
+]
