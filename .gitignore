@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Sensitive browser/network captures
+*.har
+captures/
+network-captures/
+*.cookies.json
+cookies.txt
+*.token
+*.tokens.json
+.env
+.env.*
+
+# Local creative catalogs / downloaded assets
+*.sqlite
+*.sqlite3
+*.db
+catalogs/
+downloads/
+assets/raw/
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
