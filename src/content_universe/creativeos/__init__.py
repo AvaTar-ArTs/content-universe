@@ -14,6 +14,7 @@ from .bridge import (
     persist_scene_graph,
     persist_style_dna,
 )
+from .dialects import IdeogramJsonDialect
 from .evaluation import ApprovalRecord, ApprovalStatus, EvaluationKind, EvaluationRecord
 from .genome import ReferenceGenome, ReferenceGenomeEntry
 from .importers import prompt_manifest_from_decomposition, scene_graph_from_prompt_decomposition
@@ -27,10 +28,12 @@ from .operations import (
     ReferenceRole,
 )
 from .prompt import PromptLineage, PromptManifest, PromptRevision, PromptStage
+from .prompt_builder import PromptBuilder, ProviderOperationRequired, ValidationReport
 from .provider import (
     DeterministicMockBackend,
     ProviderBackend,
     ProviderCapabilities,
+    ProviderDialect,
     ProviderRegistry,
 )
 from .scene import (
@@ -50,15 +53,19 @@ __all__ = [
     "EvaluationKind",
     "EvaluationRecord",
     "ExecutionMode",
+    "IdeogramJsonDialect",
     "OperationKind",
     "OperationRequest",
     "OperationResult",
+    "PromptBuilder",
     "PromptLineage",
     "PromptManifest",
     "PromptRevision",
     "PromptStage",
     "ProviderBackend",
     "ProviderCapabilities",
+    "ProviderDialect",
+    "ProviderOperationRequired",
     "ProviderRegistry",
     "ReferenceBinding",
     "ReferenceGenome",
@@ -73,6 +80,7 @@ __all__ = [
     "StyleSourceKind",
     "StyleStack",
     "TypographyLayer",
+    "ValidationReport",
     "persist_approval",
     "persist_evaluation",
     "persist_prompt_manifest",
