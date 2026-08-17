@@ -8,18 +8,22 @@ from content_universe.creativeos import (
     PromptLineage,
     PromptManifest,
     ReferenceGenome,
+    SceneElement,
+    SceneElementKind,
+    SceneGraph,
     StyleDNA,
     persist_approval,
     persist_evaluation,
     persist_prompt_manifest,
     persist_reference_genome,
+    persist_scene_graph,
     persist_style_dna,
 )
 from content_universe.models import EdgeKind, EntityKind, EntityRef
 from content_universe.universe import ContentUniverse
 
 
-def test_prompt_manifest_persists_with_scene_child() -> None:
+def test_prompt_manifest_persists_original_lineage() -> None:
     manifest = PromptManifest(
         manifest_id="prompt-1",
         brief="Cover brief",
@@ -30,6 +34,28 @@ def test_prompt_manifest_persists_with_scene_child() -> None:
 
     assert entity.kind is EntityKind.PROMPT_MANIFEST
     assert universe.entities[entity.ref.key].metadata["contract"]["lineage"]["original"] == "make a cover"
+
+
+def test_scene_instances_point_to_reusable_entities() -> None:
+    universe = ContentUniverse()
+    hero = EntityRef(EntityKind.CHARACTER, "hero")
+    slogan = EntityRef(EntityKind.CONCEPT, "slogan-1")
+    scene = SceneGraph(
+        elements=[
+            SceneElement("hero-left", SceneElementKind.OBJECT, entity_ref=hero),
+            SceneElement("hero-right", SceneElementKind.OBJECT, entity_ref=hero),
+            SceneElement("headline", SceneElementKind.TEXT, text="STAY WEIRD", entity_ref=slogan),
+        ]
+    )
+
+    scene_entity = persist_scene_graph(universe, "scene-1", scene)
+    instance_edges = [edge for edge in universe.graph.edges if edge.kind is EdgeKind.INSTANCE_OF]
+
+    assert scene_entity.kind is EntityKind.SCENE_GRAPH
+    assert len(scene.instances_of(hero)) == 2
+    assert len(instance_edges) == 3
+    assert {edge.target for edge in instance_edges} == {hero, slogan}
+    assert {edge.metadata["element_id"] for edge in instance_edges} == {"hero-left", "hero-right", "headline"}
 
 
 def test_style_and_reference_genome_persist_as_typed_entities() -> None:
