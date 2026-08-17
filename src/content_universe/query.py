@@ -102,12 +102,38 @@ class CatalogQuery:
 
     def lineage(self, entity_key: str) -> list[dict[str, Any]]:
         with self._connect() as db:
+            columns = {
+                str(row[1])
+                for row in db.execute("PRAGMA table_info(graph_edges)").fetchall()
+            }
+            if "edge_id" in columns:
+                rows = db.execute(
+                    "SELECT source,target,kind,edge_id,metadata_json FROM graph_edges WHERE source=? OR target=? ORDER BY kind,source,target,edge_id",
+                    (entity_key, entity_key),
+                ).fetchall()
+                return [
+                    {
+                        "source": r["source"],
+                        "target": r["target"],
+                        "kind": r["kind"],
+                        "edge_id": r["edge_id"] or None,
+                        "metadata": json.loads(r["metadata_json"]),
+                    }
+                    for r in rows
+                ]
+
             rows = db.execute(
                 "SELECT source,target,kind,metadata_json FROM graph_edges WHERE source=? OR target=? ORDER BY kind,source,target",
                 (entity_key, entity_key),
             ).fetchall()
         return [
-            {"source": r["source"], "target": r["target"], "kind": r["kind"], "metadata": json.loads(r["metadata_json"])}
+            {
+                "source": r["source"],
+                "target": r["target"],
+                "kind": r["kind"],
+                "edge_id": None,
+                "metadata": json.loads(r["metadata_json"]),
+            }
             for r in rows
         ]
 
