@@ -38,7 +38,7 @@ This roadmap is maintained alongside [`CONVERSATION_SAVEPOINT_AUDIT.md`](CONVERS
 - [ ] Quota/cost/status observation models
 - [ ] Canvas/document entities
 - [ ] Generation-request payload fixture from a fresh generation capture
-- [ ] Prompt Builder transformation fixture
+- [ ] Prompt Builder transformation fixture from a live provider operation
 - [ ] Character-reference request fixture
 - [ ] Product-reference request fixture
 - [ ] Style-reference request fixture
@@ -64,6 +64,7 @@ This roadmap is maintained alongside [`CONVERSATION_SAVEPOINT_AUDIT.md`](CONVERS
 
 ## Phase 4 — Content Universe Graph
 - [x] Projects / series / stories / characters
+- [x] Reusable concept identities for repeated text/symbol/motif instances
 - [x] Chapters / scenes
 - [x] Tracks / images / videos / prompts
 - [x] Publications / products / campaigns / files
@@ -71,6 +72,7 @@ This roadmap is maintained alongside [`CONVERSATION_SAVEPOINT_AUDIT.md`](CONVERS
 - [x] Explicit cross-media relationships
 - [x] Manifest-to-SQLite persistence
 - [x] Manifest-to-Mermaid export
+- [x] Scene instance → canonical Character/Concept linkage in the graph
 - [ ] Link manifest entities directly to harvested request/response IDs from CLI
 - [ ] Entity aliases / reconciliation assistant
 - [ ] Series/project folder import
@@ -82,39 +84,49 @@ This roadmap is maintained alongside [`CONVERSATION_SAVEPOINT_AUDIT.md`](CONVERS
 
 This phase restores the structured-authoring/runtime half that existed in the earlier iDeoMine/CreativeOS design but was not migrated into the first recovery-focused Content Universe implementation.
 
-- [ ] Explicit product/layer contracts: Content Universe / CreativeOS / iDeoMine / Prompt Builder / Reference Genome / Asset Graph
-- [ ] Provider-neutral semantic operation model
-  - [ ] generate
-  - [ ] edit
-  - [ ] remix
-  - [ ] reframe
-  - [ ] upscale
-  - [ ] remove background
-  - [ ] describe
-  - [ ] structured/layerized operations
-- [ ] Semantic source-cardinality and no-silent-substitution validators
-- [ ] `PromptManifest`
-- [ ] `PromptLineage`
-- [ ] typed `SceneGraph`
-- [ ] typed `SceneElement` hierarchy
-- [ ] `TypographyLayer`
-- [ ] `StyleStack`
-- [ ] portable `StyleDNA`
-- [ ] `ReferenceGenome`
-- [ ] creator canon / character identity anchors / approved reference sets
-- [ ] evaluation and approval records
-- [ ] original-prompt immutability tests
-- [ ] authoring-reference vs generation-reference separation tests
+- [x] Explicit product/layer contracts: Content Universe / CreativeOS / iDeoMine / Prompt Builder / Reference Genome / Asset Graph
+- [x] Provider-neutral semantic operation model
+  - [x] generate
+  - [x] edit
+  - [x] remix
+  - [x] reframe
+  - [x] upscale
+  - [x] remove background
+  - [x] describe
+  - [x] Magic Prompt as a distinct prompt-transformation intent
+  - [x] layerize text
+- [x] Semantic source-cardinality and no-silent-substitution validators
+- [x] `PromptManifest`
+- [x] immutable `PromptLineage`
+- [x] typed `SceneGraph`
+- [x] typed scene element/instance model with canonical entity linkage
+- [x] `TypographyLayer`
+- [x] `StyleStack`
+- [x] portable `StyleDNA`
+- [x] `ReferenceGenome` core contract
+- [x] explicit authoring / generation / evaluation / continuity reference roles
+- [x] `EvaluationRecord` and `ApprovalRecord`
+- [x] original-prompt immutability tests
+- [x] authoring-reference vs generation-reference separation tests
+- [x] local Prompt Builder runtime: build/import/deconstruct/compose/reference/enhance/validate/localize/reflow/export
+- [x] provider-only Prompt Builder methods refuse to fabricate provider results
+- [x] observed Ideogram structured JSON import/export dialect
+- [ ] `StructuredDesignAsset`
+- [ ] Mask and GenerationWindow contracts
+- [ ] Continuity constraint/record contracts
+- [ ] targeted regeneration plan contract
 
 ## Phase 6 — Provider Runtime & Workflow Engine
 
-Recovery adapters parse existing evidence. Provider backends perform live supported operations. Do not merge those contracts.
+Recovery adapters parse existing evidence. Provider backends perform live supported operations. Provider dialects translate structured authoring state. These contracts remain separate.
 
-- [ ] `ProviderBackend` protocol
-- [ ] `ProviderRegistry`
-- [ ] provider capability registry
-- [ ] provider dialect/translation layer
-- [ ] mock backend for deterministic/credit-free tests
+- [x] `ProviderBackend` protocol
+- [x] `ProviderRegistry`
+- [x] provider capability registry contract
+- [x] `ProviderDialect` import/export/validation boundary
+- [x] deterministic mock backend for credit-free semantic tests
+- [x] declarative Ideogram/iDeoMine provider catalog preserving the historical 26-tool surface
+- [ ] async/sync runtime policy for real provider backends
 - [ ] remote MCP federation backend boundary
 - [ ] policy-driven provider/model router
 - [ ] workflow registry/engine
@@ -129,8 +141,8 @@ Recovery adapters parse existing evidence. Provider backends perform live suppor
 - [ ] explicit partial-failure model
 - [ ] retries/backoff/rate-limit/cost/privacy state
 - [ ] generation/job status events
-- [ ] organizations/workspaces
-- [ ] datasets and model-training records
+- [ ] organizations/workspaces runtime state
+- [ ] datasets and model-training runtime state
 
 ## Phase 7 — Evaluation, Search & Creative Intelligence
 - [x] SQLite query layer
@@ -139,6 +151,7 @@ Recovery adapters parse existing evidence. Provider backends perform live suppor
 - [x] Entity search
 - [x] Lineage and provenance queries
 - [x] Optional SQLite FTS5 index helper
+- [x] durable evaluation/approval record contracts
 - [ ] Embedding/vector index adapter
 - [ ] Prompt component frequency analytics
 - [ ] Style fingerprint clustering
@@ -146,12 +159,12 @@ Recovery adapters parse existing evidence. Provider backends perform live suppor
 - [ ] Duplicate / near-duplicate asset detection
 - [ ] Cross-platform semantic reconciliation
 - [ ] Dataset quality/completeness scoring reports
-- [ ] Character consistency evaluator
-- [ ] Style consistency evaluator
-- [ ] Text accuracy evaluator
-- [ ] Layout compliance evaluator
-- [ ] Story/visual continuity evaluator
-- [ ] Human approval/rejection/revision gates
+- [ ] Character consistency evaluator implementation
+- [ ] Style consistency evaluator implementation
+- [ ] Text accuracy evaluator implementation
+- [ ] Layout compliance evaluator implementation
+- [ ] Story/visual continuity evaluator implementation
+- [ ] Human review workflow and approval gates
 - [ ] Approved-output feedback into Reference Genome/training data
 
 ## Phase 8 — Durable Assets & Async Infrastructure
@@ -173,6 +186,7 @@ Recovery adapters parse existing evidence. Provider backends perform live suppor
 - [x] Ideogram userscript
 - [ ] CreativeOS semantic MCP tools
 - [ ] Provider-control TUI views
+- [ ] Prompt Builder CLI/TUI views
 - [ ] Browser extension / DevTools collector
 - [ ] Local HTTP/REST service
 - [ ] Local web studio/dashboard
