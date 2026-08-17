@@ -24,6 +24,7 @@ class EntityKind(StrEnum):
     PROMPT = "prompt"
     PROMPT_MANIFEST = "prompt_manifest"
     SCENE_GRAPH = "scene_graph"
+    STRUCTURED_DESIGN_ASSET = "structured_design_asset"
     STYLE_DNA = "style_dna"
     REFERENCE_GENOME = "reference_genome"
     EVALUATION = "evaluation"
