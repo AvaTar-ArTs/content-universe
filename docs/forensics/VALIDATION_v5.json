@@ -1,0 +1,13 @@
+{
+  "master_zip": "CreativeOS-ContentUniverse-Canonical-Forensic-Master-v5.0.zip",
+  "zip_test": "ok",
+  "master_size_bytes": 33791376,
+  "master_file_count": 645,
+  "checksum_failures": [],
+  "security_candidate_hits": 2,
+  "security_unresolved_hits": 0,
+  "content_universe_tests": "39 passed",
+  "my_creators_tests": "5 passed",
+  "creator_camp_broken_relative_links": 0,
+  "github_head": "a07928fda9dc6e729c3359f53f1c4d01adefad73"
+}
