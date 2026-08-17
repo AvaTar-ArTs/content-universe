@@ -21,6 +21,7 @@ class OperationKind(StrEnum):
     UPSCALE = "upscale"
     REMOVE_BACKGROUND = "remove_background"
     DESCRIBE = "describe"
+    MAGIC_PROMPT = "magic_prompt"
     LAYERIZE_TEXT = "layerize_text"
 
 
@@ -73,10 +74,21 @@ class ReferenceBinding:
         if self.weight is not None and self.weight < 0:
             raise ValueError("reference weight cannot be negative")
 
+    @property
+    def passed_to_generation(self) -> bool:
+        """Derived compatibility view of generation-conditioning intent.
+
+        The historical Prompt Builder schema stored a separate boolean. CreativeOS
+        derives it from the reference role so contradictory state is impossible.
+        """
+
+        return self.role is ReferenceRole.GENERATION
+
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)
         data["role"] = self.role.value
         data["kind"] = self.kind.value
+        data["passed_to_generation"] = self.passed_to_generation
         if self.ref is not None:
             data["ref"] = {"kind": self.ref.kind.value, "id": self.ref.id}
         return data
@@ -97,6 +109,7 @@ _AT_LEAST_ONE_SOURCE = {
 
 _NO_SOURCE = {
     OperationKind.GENERATE,
+    OperationKind.MAGIC_PROMPT,
 }
 
 
