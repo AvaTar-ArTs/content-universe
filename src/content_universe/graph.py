@@ -12,12 +12,26 @@ class GraphEdge:
     target: EntityRef
     kind: EdgeKind
     metadata: dict[str, Any] = field(default_factory=dict, compare=False)
+    edge_id: str | None = field(default=None, compare=False)
+
+    @property
+    def identity_key(self) -> tuple[str, str, str, str]:
+        """Stable edge identity while preserving historical dedupe by default.
+
+        Ordinary relationships omit `edge_id` and still deduplicate by
+        source/target/kind. Instance-like relationships may supply an edge ID,
+        such as a SceneElement ID, so multiple appearances of the same canonical
+        entity are retained independently.
+        """
+
+        return (self.source.key, self.target.key, self.kind.value, self.edge_id or "")
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "source": self.source.key,
             "target": self.target.key,
             "kind": self.kind.value,
+            "edge_id": self.edge_id,
             "metadata": self.metadata,
         }
 
@@ -25,10 +39,10 @@ class GraphEdge:
 class CreativeGraph:
     def __init__(self) -> None:
         self.edges: list[GraphEdge] = []
-        self._keys: set[tuple[str, str, str]] = set()
+        self._keys: set[tuple[str, str, str, str]] = set()
 
     def add(self, edge: GraphEdge) -> None:
-        key = (edge.source.key, edge.target.key, edge.kind.value)
+        key = edge.identity_key
         if key not in self._keys:
             self._keys.add(key)
             self.edges.append(edge)
@@ -52,5 +66,6 @@ class CreativeGraph:
         for edge in self.edges:
             a = edge.source.key.replace(":", "_").replace("-", "_")
             b = edge.target.key.replace(":", "_").replace("-", "_")
-            lines.append(f'  {a}["{edge.source.key}"] -->|{edge.kind.value}| {b}["{edge.target.key}"]')
+            label = edge.kind.value if edge.edge_id is None else f"{edge.kind.value}:{edge.edge_id}"
+            lines.append(f'  {a}["{edge.source.key}"] -->|{label}| {b}["{edge.target.key}"]')
         return "\n".join(lines)
