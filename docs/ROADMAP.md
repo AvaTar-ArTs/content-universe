@@ -111,8 +111,9 @@ This phase restores the structured-authoring/runtime half that existed in the ea
 - [x] local Prompt Builder runtime: build/import/deconstruct/compose/reference/enhance/validate/localize/reflow/export
 - [x] provider-only Prompt Builder methods refuse to fabricate provider results
 - [x] observed Ideogram structured JSON import/export dialect
-- [ ] `StructuredDesignAsset`
-- [ ] Mask and GenerationWindow contracts
+- [x] `StructuredDesignAsset`
+- [x] Mask and GenerationWindow contracts
+- [x] StructuredDesignAsset dependency and derivative-lineage graph persistence
 - [ ] Continuity constraint/record contracts
 - [ ] targeted regeneration plan contract
 
