@@ -6,6 +6,14 @@ authoring state, semantic operations, provider capabilities, evaluation, and
 reusable creative memory.
 """
 
+from .bridge import (
+    persist_approval,
+    persist_evaluation,
+    persist_prompt_manifest,
+    persist_reference_genome,
+    persist_scene_graph,
+    persist_style_dna,
+)
 from .evaluation import ApprovalRecord, ApprovalStatus, EvaluationKind, EvaluationRecord
 from .genome import ReferenceGenome, ReferenceGenomeEntry
 from .importers import prompt_manifest_from_decomposition, scene_graph_from_prompt_decomposition
@@ -65,6 +73,12 @@ __all__ = [
     "StyleSourceKind",
     "StyleStack",
     "TypographyLayer",
+    "persist_approval",
+    "persist_evaluation",
+    "persist_prompt_manifest",
+    "persist_reference_genome",
+    "persist_scene_graph",
+    "persist_style_dna",
     "prompt_manifest_from_decomposition",
     "scene_graph_from_prompt_decomposition",
 ]
