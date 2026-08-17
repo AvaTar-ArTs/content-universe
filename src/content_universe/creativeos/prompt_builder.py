@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Callable
+from typing import Any, Callable, Iterable
 
+from ..models import EntityRef
 from .operations import OperationKind, OperationRequest, ReferenceBinding
 from .prompt import PromptLineage, PromptManifest, PromptRevision, PromptStage
 from .provider import ProviderDialect
@@ -161,19 +162,19 @@ class PromptBuilder:
             raise ValueError("cannot export invalid prompt manifest: " + "; ".join(report.errors))
         return dialect.export_manifest(manifest)
 
-    def describe(self, source) -> None:
+    def describe(self, source: EntityRef) -> None:
         request = OperationRequest(OperationKind.DESCRIBE, sources=[source])
         raise ProviderOperationRequired(OperationKind.DESCRIBE, request)
 
     def magic_prompt(self, manifest: PromptManifest) -> None:
-        request = OperationRequest(OperationKind.GENERATE, prompt_manifest_id=manifest.manifest_id)
-        raise ProviderOperationRequired(OperationKind.GENERATE, request)
+        request = OperationRequest(OperationKind.MAGIC_PROMPT, prompt_manifest_id=manifest.manifest_id)
+        raise ProviderOperationRequired(OperationKind.MAGIC_PROMPT, request)
 
-    def layerize_text(self, source) -> None:
+    def layerize_text(self, source: EntityRef) -> None:
         request = OperationRequest(OperationKind.LAYERIZE_TEXT, sources=[source])
         raise ProviderOperationRequired(OperationKind.LAYERIZE_TEXT, request)
 
-    def edit(self, manifest: PromptManifest, sources) -> None:
+    def edit(self, manifest: PromptManifest, sources: Iterable[EntityRef]) -> None:
         request = OperationRequest(
             OperationKind.EDIT,
             sources=list(sources),
