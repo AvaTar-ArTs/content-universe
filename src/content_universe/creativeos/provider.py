@@ -32,8 +32,27 @@ class ProviderCapabilities:
         }
 
 
+class ProviderDialect(Protocol):
+    """Reversible structured-authoring translation boundary.
+
+    A dialect translates provider-neutral CreativeOS state to/from a provider or
+    interchange representation. It must not perform provider network calls.
+    """
+
+    name: str
+
+    def import_payload(self, payload: Any, *, manifest_id: str) -> Any:
+        ...
+
+    def export_manifest(self, manifest: Any) -> Any:
+        ...
+
+    def validate_manifest(self, manifest: Any) -> list[str]:
+        ...
+
+
 class ProviderBackend(Protocol):
-    """Live/mock execution boundary, distinct from recovery adapters."""
+    """Live/mock execution boundary, distinct from recovery adapters and dialects."""
 
     name: str
 
