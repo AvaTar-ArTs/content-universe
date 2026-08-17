@@ -22,6 +22,7 @@
         "prompt",
         "prompt_manifest",
         "scene_graph",
+        "structured_design_asset",
         "style_dna",
         "reference_genome",
         "evaluation",
