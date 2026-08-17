@@ -57,6 +57,14 @@ class TypographyLayer:
 
 @dataclass(slots=True)
 class SceneElement:
+    """One appearance/instance inside a SceneGraph.
+
+    `element_id` identifies this specific appearance. `entity_ref` optionally
+    points to the reusable canonical identity it instantiates, for example a
+    Character or Concept in Content Universe. This directly preserves the
+    entity-versus-instance distinction needed for continuity and targeted edits.
+    """
+
     element_id: str
     kind: SceneElementKind
     description: str | None = None
@@ -73,7 +81,18 @@ class SceneElement:
         if self.typography is not None and self.kind is not SceneElementKind.TEXT:
             raise ValueError("TypographyLayer may only be attached to a text SceneElement")
 
+    @property
+    def instance_of(self) -> EntityRef | None:
+        """Canonical identity instantiated by this element, if resolved."""
+
+        return self.entity_ref
+
     def to_dict(self) -> dict[str, Any]:
+        entity = (
+            {"kind": self.entity_ref.kind.value, "id": self.entity_ref.id}
+            if self.entity_ref is not None
+            else None
+        )
         return {
             "element_id": self.element_id,
             "kind": self.kind.value,
@@ -81,11 +100,8 @@ class SceneElement:
             "text": self.text,
             "bounds": asdict(self.bounds) if self.bounds else None,
             "typography": self.typography.to_dict() if self.typography else None,
-            "entity_ref": (
-                {"kind": self.entity_ref.kind.value, "id": self.entity_ref.id}
-                if self.entity_ref is not None
-                else None
-            ),
+            "entity_ref": entity,
+            "instance_of": entity,
             "references": [item.to_dict() for item in self.references],
             "metadata": self.metadata,
         }
@@ -108,6 +124,9 @@ class SceneGraph:
 
     def get_element(self, element_id: str) -> SceneElement | None:
         return next((item for item in self.elements if item.element_id == element_id), None)
+
+    def instances_of(self, entity_ref: EntityRef) -> list[SceneElement]:
+        return [item for item in self.elements if item.entity_ref == entity_ref]
 
     def to_dict(self) -> dict[str, Any]:
         return {
