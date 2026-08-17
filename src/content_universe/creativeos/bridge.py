@@ -83,6 +83,7 @@ def persist_scene_graph(
                     "element_kind": element.kind.value,
                     "text": element.text,
                 },
+                edge_id=element.element_id,
             )
         )
     return entity
