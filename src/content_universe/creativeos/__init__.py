@@ -12,8 +12,10 @@ from .bridge import (
     persist_prompt_manifest,
     persist_reference_genome,
     persist_scene_graph,
+    persist_structured_design_asset,
     persist_style_dna,
 )
+from .design_asset import GenerationWindow, Mask, StructuredDesignAsset
 from .dialects import IdeogramJsonDialect
 from .evaluation import ApprovalRecord, ApprovalStatus, EvaluationKind, EvaluationRecord
 from .genome import ReferenceGenome, ReferenceGenomeEntry
@@ -36,13 +38,7 @@ from .provider import (
     ProviderDialect,
     ProviderRegistry,
 )
-from .scene import (
-    BoundingBox,
-    SceneElement,
-    SceneElementKind,
-    SceneGraph,
-    TypographyLayer,
-)
+from .scene import BoundingBox, SceneElement, SceneElementKind, SceneGraph, TypographyLayer
 from .style import StyleDNA, StyleLayer, StyleSourceKind, StyleStack
 
 __all__ = [
@@ -53,7 +49,9 @@ __all__ = [
     "EvaluationKind",
     "EvaluationRecord",
     "ExecutionMode",
+    "GenerationWindow",
     "IdeogramJsonDialect",
+    "Mask",
     "OperationKind",
     "OperationRequest",
     "OperationResult",
@@ -75,6 +73,7 @@ __all__ = [
     "SceneElement",
     "SceneElementKind",
     "SceneGraph",
+    "StructuredDesignAsset",
     "StyleDNA",
     "StyleLayer",
     "StyleSourceKind",
@@ -86,6 +85,7 @@ __all__ = [
     "persist_prompt_manifest",
     "persist_reference_genome",
     "persist_scene_graph",
+    "persist_structured_design_asset",
     "persist_style_dna",
     "prompt_manifest_from_decomposition",
     "scene_graph_from_prompt_decomposition",
