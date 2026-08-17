@@ -61,7 +61,7 @@ def persist_scene_graph(
     *,
     source: str = "creativeos",
 ) -> CreativeEntity:
-    return _ingest_contract_entity(
+    entity = _ingest_contract_entity(
         universe,
         entity_id=scene_id,
         kind=EntityKind.SCENE_GRAPH,
@@ -69,6 +69,22 @@ def persist_scene_graph(
         source=source,
         description=scene.high_level_description,
     )
+    for element in scene.elements:
+        if element.entity_ref is None:
+            continue
+        universe.graph.add(
+            GraphEdge(
+                entity.ref,
+                element.entity_ref,
+                EdgeKind.INSTANCE_OF,
+                {
+                    "element_id": element.element_id,
+                    "element_kind": element.kind.value,
+                    "text": element.text,
+                },
+            )
+        )
+    return entity
 
 
 def persist_style_dna(
