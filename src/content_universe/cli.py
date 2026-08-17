@@ -8,6 +8,7 @@ from .adapters import default_registry
 from .adapters.ideogram.assets import manifest_from_records, write_manifest
 from .adapters.ideogram.models import filter_models, model_records
 from .audit import audit_records
+from .dataset_pack import build_dataset_pack
 from .exporters import export_csv, export_json, export_jsonl
 from .fts import rebuild_fts
 from .manifest import manifest_template, universe_from_manifest
@@ -27,6 +28,7 @@ def _add_universe_outputs(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--sqlite")
     parser.add_argument("--mermaid")
     parser.add_argument("--asset-manifest")
+    parser.add_argument("--pack", help="portable normalized dataset ZIP")
     parser.add_argument("--summary", action="store_true")
 
 
@@ -81,6 +83,7 @@ def build_parser() -> argparse.ArgumentParser:
     manifest_load.add_argument("--sqlite")
     manifest_load.add_argument("--mermaid")
     manifest_load.add_argument("--universe-json")
+    manifest_load.add_argument("--pack")
     manifest_load.add_argument("--summary", action="store_true")
     return parser
 
@@ -95,7 +98,7 @@ def _emit_universe(universe: ContentUniverse, args: argparse.Namespace) -> None:
     records = list(universe.generations.values())
     requested_output = any(
         getattr(args, name, None)
-        for name in ("json", "jsonl", "csv", "universe_json", "sqlite", "mermaid", "asset_manifest")
+        for name in ("json", "jsonl", "csv", "universe_json", "sqlite", "mermaid", "asset_manifest", "pack")
     )
     if getattr(args, "summary", False) or not requested_output:
         print(json.dumps(universe.summary(), indent=2, ensure_ascii=False))
@@ -109,6 +112,9 @@ def _emit_universe(universe: ContentUniverse, args: argparse.Namespace) -> None:
         Path(args.universe_json).write_text(json.dumps(universe.to_dict(), indent=2, ensure_ascii=False), encoding="utf-8")
     if getattr(args, "asset_manifest", None):
         write_manifest(manifest_from_records(records), args.asset_manifest)
+    if getattr(args, "pack", None):
+        pack_path = build_dataset_pack(universe, args.pack)
+        print(f"wrote dataset pack {pack_path}")
     if getattr(args, "sqlite", None):
         with SQLiteStore(args.sqlite) as store:
             store.save_universe(universe)
@@ -196,13 +202,15 @@ def main() -> int:
         universe = universe_from_manifest(args.manifest)
         if args.universe_json:
             Path(args.universe_json).write_text(json.dumps(universe.to_dict(), indent=2, ensure_ascii=False), encoding="utf-8")
+        if args.pack:
+            print(f"wrote dataset pack {build_dataset_pack(universe, args.pack)}")
         if args.sqlite:
             with SQLiteStore(args.sqlite) as store:
                 store.save_universe(universe)
                 print(json.dumps({"sqlite": str(args.sqlite), **store.stats()}, indent=2))
         if args.mermaid:
             Path(args.mermaid).write_text(universe.graph.to_mermaid(), encoding="utf-8")
-        if args.summary or not (args.sqlite or args.mermaid or args.universe_json):
+        if args.summary or not (args.sqlite or args.mermaid or args.universe_json or args.pack):
             print(json.dumps(universe.summary(), indent=2, ensure_ascii=False))
         return 0
 

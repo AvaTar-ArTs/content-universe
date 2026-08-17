@@ -20,6 +20,8 @@ class _Scanner(HTMLParser):
         super().__init__()
         self.rows: list[dict[str, str]] = []
         self.current_generation: str | None = None
+        self.current_response_index: str = ""
+        self.current_href: str = ""
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         data = {k: v or "" for k, v in attrs}
@@ -27,18 +29,37 @@ class _Scanner(HTMLParser):
         match = GRID_RE.search(testid)
         if match:
             self.current_generation = match.group(1)
+            self.current_response_index = ""
+            self.current_href = ""
+
         href = data.get("href", "")
-        src = data.get("src", "")
         gm = GEN_RE.search(href)
+        if gm:
+            self.current_generation = gm.group(1)
+            self.current_response_index = gm.group(2)
+            self.current_href = href
+
+        src = data.get("src", "")
         am = ASSET_RE.search(src)
-        if gm or am:
+        if am:
             self.rows.append({
-                "generation_id": gm.group(1) if gm else (self.current_generation or ""),
-                "response_index": gm.group(2) if gm else "",
-                "response_id": am.group(1) if am else "",
-                "resolution": am.group(2) if am else "",
-                "href": href,
+                "generation_id": self.current_generation or "",
+                "response_index": self.current_response_index,
+                "response_id": am.group(1),
+                "resolution": am.group(2) or "",
+                "href": self.current_href,
                 "asset_url": src,
+            })
+        elif gm:
+            # Preserve a generation/index observation even if the image has not
+            # lazy-loaded yet. A later image row can enrich the same generation.
+            self.rows.append({
+                "generation_id": gm.group(1),
+                "response_index": gm.group(2),
+                "response_id": "",
+                "resolution": "",
+                "href": href,
+                "asset_url": "",
             })
 
 
