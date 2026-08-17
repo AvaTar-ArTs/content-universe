@@ -30,4 +30,4 @@ The recovered Handoff v3 also contains time-bound files such as `CURRENT_STATE.m
 The simultaneously re-uploaded v4 Forensic Master and v4 Groups archives were byte-identical to the v4 source archives already embedded in canonical v5. The Handoff v3 archive was the genuinely new evidence source.
 
 Recovered Handoff v3 SHA-256:
-`a02838a28842838ce433d4e7560cdb9ddc68bb75765b46725919166890f3eb91`
+`a27bb18cb199be5e2468d7c9f9769bbf3658dce87cf85a214ba91f35d110db4f`
