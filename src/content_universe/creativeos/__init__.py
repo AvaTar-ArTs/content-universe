@@ -2,10 +2,13 @@
 
 This package intentionally sits beside the recovery adapters. Recovery adapters
 parse existing evidence; CreativeOS contracts describe creator intent, structured
-authoring state, semantic operations, provider capabilities, and evaluation.
+authoring state, semantic operations, provider capabilities, evaluation, and
+reusable creative memory.
 """
 
+from .evaluation import ApprovalRecord, ApprovalStatus, EvaluationKind, EvaluationRecord
 from .genome import ReferenceGenome, ReferenceGenomeEntry
+from .importers import prompt_manifest_from_decomposition, scene_graph_from_prompt_decomposition
 from .operations import (
     ExecutionMode,
     OperationKind,
@@ -32,8 +35,12 @@ from .scene import (
 from .style import StyleDNA, StyleLayer, StyleSourceKind, StyleStack
 
 __all__ = [
+    "ApprovalRecord",
+    "ApprovalStatus",
     "BoundingBox",
     "DeterministicMockBackend",
+    "EvaluationKind",
+    "EvaluationRecord",
     "ExecutionMode",
     "OperationKind",
     "OperationRequest",
@@ -58,4 +65,6 @@ __all__ = [
     "StyleSourceKind",
     "StyleStack",
     "TypographyLayer",
+    "prompt_manifest_from_decomposition",
+    "scene_graph_from_prompt_decomposition",
 ]
