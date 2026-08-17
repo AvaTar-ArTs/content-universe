@@ -4,28 +4,59 @@ All notable project changes are recorded here. The project is still pre-1.0; arc
 
 ## Unreleased
 
-### Conversation parity audit
+### Conversation and migration audit
 
 - Added `docs/CONVERSATION_SAVEPOINT_AUDIT.md`, reconstructing the Ideogram/Suno/iDeoMine/CreativeOS evolution as chronological save points and comparing each checkpoint against the repository.
-- Recovered the previously designed distinction between Content Universe, CreativeOS, iDeoMine, Prompt Builder, Reference Genome, Skills, and Asset Graph.
-- Identified the central migration gap: recovery/catalog/graph functionality was substantially implemented, while structured authoring, provider execution semantics, workflow orchestration, evaluation, and reusable creative memory were mostly not migrated.
+- Added `docs/CREATIVEOS_MIGRATION_AUDIT.md`, comparing archived CreativeOS/iDeoMine behavior against recovery-focused Content Universe and the merged architecture.
+- Recovered the designed distinction between Content Universe, CreativeOS, iDeoMine, Prompt Builder, Reference Genome, Skills, and Asset Graph.
 - Reworked `docs/ARCHITECTURE.md` to model both recovery/evidence and creative-authoring directions.
-- Reworked `docs/ROADMAP.md` to separate recovery adapters from provider backends and to add explicit CreativeOS contract/runtime phases.
+- Reworked `docs/ROADMAP.md` to separate recovery adapters, provider dialects, provider backends, workflows, evaluation, and durable infrastructure.
 - Corrected roadmap drift for already-implemented Ideogram reference collection normalization and optional FTS5 support.
+
+### CreativeOS contract recovery
+
+- Added `content_universe.creativeos` as a typed provider-neutral authoring/runtime contract layer above the existing durable Content Universe graph.
+- Added semantic operation contracts for generate, edit, remix, reframe, upscale, background removal, describe, Magic Prompt, and Layerize Text.
+- Added source-cardinality validation and executable no-silent-substitution invariants.
+- Added explicit authoring, generation, evaluation, and continuity reference roles. `passed_to_generation` is derived from role to prevent contradictory state.
+- Added immutable `PromptLineage` and `PromptManifest`, preserving the creator's original prompt across enhancements, localization, reflow, provider dialects, and provider-expanded prompts.
+- Added typed `SceneGraph`, scene elements, bounding boxes, `TypographyLayer`, reusable entity/concept identity linkage, and `INSTANCE_OF` graph persistence.
+- Added `StyleStack` and portable `StyleDNA` rather than reducing simultaneous style mechanisms to one scalar field.
+- Added `ReferenceGenome` and approved reference-entry contracts.
+- Added `EvaluationRecord` and `ApprovalRecord` with durable Content Universe graph integration.
+- Added `ProviderBackend`, `ProviderRegistry`, `ProviderCapabilities`, and `ProviderDialect` contracts, deliberately separate from recovery adapters.
+- Added `DeterministicMockBackend`, using semantic-request hashes for reproducible job/output IDs and explicitly reporting mock rather than provider execution.
+- Added a local `PromptBuilder` runtime for build/import/deconstruct/compose/reference/enhance/validate/localize/reflow/export.
+- Provider-backed Prompt Builder methods now emit an explicit `ProviderOperationRequired` boundary rather than simulating Describe, Magic Prompt, Layerize Text, or provider-backed edit results.
+- Added an observed-field `IdeogramJsonDialect` that imports/exports the structured prompt shape established by captured Ideogram evidence while preserving unknown provider fields.
+- Added a separate `providers` execution namespace and declarative Ideogram/iDeoMine catalog preserving the historical 26-tool surface without reintroducing string-based workflow coupling.
+- Added reusable `concept` entities for repeated slogans/symbols/motifs and scene-instance links to canonical Character/Concept identities.
+- Added `StructuredDesignAsset`, `Mask`, and `GenerationWindow` contracts so editable creative objects can bind base assets, SceneGraphs, PromptManifests, StyleDNA, vectors, targeted edit regions, and parent design lineage.
+- Added persistence bridges so Prompt Manifests, SceneGraphs, StyleDNA, Reference Genomes, StructuredDesignAssets, evaluations, and approvals reuse the existing Content Universe entity/graph substrate instead of creating a second state store.
+
+### Tests
+
+- Added semantic operation/source-cardinality tests.
+- Added original-prompt immutability and reference-role tests.
+- Added deterministic mock-provider tests.
+- Added structured Ideogram JSON round-trip and Prompt Builder boundary tests.
+- Added CreativeOS-to-Content-Universe persistence tests.
+- Added scene instance-to-entity graph tests.
+- Added the historical 26-tool Ideogram provider catalog parity test.
+- Added StructuredDesignAsset dependency/derivative graph tests.
 
 ### Next architectural checkpoint
 
-Provider-neutral contracts should be restored before live provider transports:
+The next high-value work is no longer contract reconstruction. It is runtime orchestration and durability:
 
-- semantic operation contracts and no-silent-substitution validators,
-- `PromptManifest` and `PromptLineage`,
-- `SceneGraph` and `TypographyLayer`,
-- `StyleStack` / `StyleDNA`,
-- `ReferenceGenome`,
-- provider capability/backend/dialect protocols,
-- evaluation/approval records.
+- decide sync/async policy for real provider backends,
+- build Workflow Engine v2 over typed semantic operations and provider-state services,
+- restore asset-pack / character-system / style-training workflows without the old stringly provider coupling,
+- add continuity constraints and targeted regeneration plans,
+- add durable blob/object storage with hashes and integrity checks,
+- pressure-test the system against the accessible full Ideogram archive.
 
-Live provider execution should only be layered on after those semantics are stable and tested.
+Live provider execution should only be layered on through supported provider transports and must preserve the restored semantic invariants.
 
 ## 0.3.0 — 2026-08-17
 
