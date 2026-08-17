@@ -58,8 +58,9 @@ CREATE TABLE IF NOT EXISTS graph_edges (
   source TEXT NOT NULL,
   target TEXT NOT NULL,
   kind TEXT NOT NULL,
+  edge_id TEXT NOT NULL DEFAULT '',
   metadata_json TEXT NOT NULL,
-  PRIMARY KEY(source, target, kind)
+  PRIMARY KEY(source, target, kind, edge_id)
 );
 CREATE TABLE IF NOT EXISTS provenance (
   entity_key TEXT NOT NULL,
@@ -94,6 +95,41 @@ class SQLiteStore:
         self.db = sqlite3.connect(self.path)
         self.db.execute("PRAGMA foreign_keys=ON")
         self.db.executescript(SCHEMA)
+        self._migrate_graph_edge_identity()
+
+    def _migrate_graph_edge_identity(self) -> None:
+        """Upgrade pre-CreativeOS graph tables without losing existing edges."""
+
+        columns = {
+            str(row[1])
+            for row in self.db.execute("PRAGMA table_info(graph_edges)").fetchall()
+        }
+        if "edge_id" in columns:
+            return
+
+        with self.db:
+            self.db.execute("ALTER TABLE graph_edges RENAME TO graph_edges_legacy")
+            self.db.execute(
+                """
+                CREATE TABLE graph_edges (
+                  source TEXT NOT NULL,
+                  target TEXT NOT NULL,
+                  kind TEXT NOT NULL,
+                  edge_id TEXT NOT NULL DEFAULT '',
+                  metadata_json TEXT NOT NULL,
+                  PRIMARY KEY(source, target, kind, edge_id)
+                )
+                """
+            )
+            self.db.execute(
+                """
+                INSERT INTO graph_edges(source,target,kind,edge_id,metadata_json)
+                SELECT source,target,kind,'',metadata_json FROM graph_edges_legacy
+                """
+            )
+            self.db.execute("DROP TABLE graph_edges_legacy")
+            self.db.execute("CREATE INDEX IF NOT EXISTS idx_edges_source ON graph_edges(source)")
+            self.db.execute("CREATE INDEX IF NOT EXISTS idx_edges_target ON graph_edges(target)")
 
     def close(self) -> None:
         self.db.close()
@@ -158,8 +194,14 @@ class SQLiteStore:
         with self.db:
             for edge in graph.edges:
                 self.db.execute(
-                    "INSERT OR REPLACE INTO graph_edges(source,target,kind,metadata_json) VALUES(?,?,?,?)",
-                    (edge.source.key, edge.target.key, edge.kind.value, json.dumps(edge.metadata, ensure_ascii=False)),
+                    "INSERT OR REPLACE INTO graph_edges(source,target,kind,edge_id,metadata_json) VALUES(?,?,?,?,?)",
+                    (
+                        edge.source.key,
+                        edge.target.key,
+                        edge.kind.value,
+                        edge.edge_id or "",
+                        json.dumps(edge.metadata, ensure_ascii=False),
+                    ),
                 )
 
     def save_provenance(self, ledger: ProvenanceLedger) -> None:
@@ -199,6 +241,7 @@ class SQLiteStore:
     def stats(self) -> dict[str, int]:
         def count(table: str) -> int:
             return int(self.db.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0])
+
         return {
             "generations": count("generations"),
             "responses": count("responses"),
