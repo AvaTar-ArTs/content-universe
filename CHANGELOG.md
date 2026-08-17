@@ -34,6 +34,15 @@ All notable project changes are recorded here. The project is still pre-1.0; arc
 - Added `StructuredDesignAsset`, `Mask`, and `GenerationWindow` contracts so editable creative objects can bind base assets, SceneGraphs, PromptManifests, StyleDNA, vectors, targeted edit regions, and parent design lineage.
 - Added persistence bridges so Prompt Manifests, SceneGraphs, StyleDNA, Reference Genomes, StructuredDesignAssets, evaluations, and approvals reuse the existing Content Universe entity/graph substrate instead of creating a second state store.
 
+### Graph identity and persistence
+
+- Fixed a continuity/data-loss bug discovered by the new entity-instance tests: two appearances of the same canonical character in one SceneGraph previously collapsed because graph identity was only `(source, target, kind)`.
+- Added optional `GraphEdge.edge_id`; ordinary relationships retain historical deduplication while instance-sensitive relationships can use a stable per-edge identity such as a `SceneElement.element_id`.
+- Scene `INSTANCE_OF` edges now use their element IDs so repeated appearances of the same character/concept remain distinct.
+- Migrated SQLite `graph_edges` identity from `(source, target, kind)` to `(source, target, kind, edge_id)`.
+- Added an automatic in-place migration for existing catalogs, preserving legacy edges as `edge_id=''` rather than requiring a fresh database.
+- Updated graph JSON Schema and lineage queries to expose edge identity while remaining compatible with unmigrated read-only catalogs.
+
 ### Tests
 
 - Added semantic operation/source-cardinality tests.
@@ -44,6 +53,8 @@ All notable project changes are recorded here. The project is still pre-1.0; arc
 - Added scene instance-to-entity graph tests.
 - Added the historical 26-tool Ideogram provider catalog parity test.
 - Added StructuredDesignAsset dependency/derivative graph tests.
+- Added multi-instance graph storage and legacy SQLite migration regression tests.
+- Verified the resulting head across Python 3.11, 3.12, and 3.13 with install, Ruff, pytest, and compile all succeeding.
 
 ### Next architectural checkpoint
 
