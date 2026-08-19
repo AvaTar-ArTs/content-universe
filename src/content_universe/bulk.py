@@ -6,6 +6,8 @@ from typing import Iterable
 
 from .adapters import default_registry
 from .adapters.base import AdapterRegistry
+from .pipeline import finalize_universe
+from .universe import ContentUniverse
 
 
 DEFAULT_IGNORED_DIRS = {
@@ -39,6 +41,21 @@ class FolderDiscovery:
             "supported": [str(path) for path in self.supported],
             "unsupported": [str(path) for path in self.unsupported],
             "skipped": [str(path) for path in self.skipped],
+        }
+
+
+@dataclass(slots=True)
+class FolderAnalysis:
+    discovery: FolderDiscovery
+    universe: ContentUniverse
+    failures: dict[str, str] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "discovery": self.discovery.to_dict(),
+            "failures": self.failures,
+            "failure_count": len(self.failures),
+            "universe": self.universe.summary(),
         }
 
 
@@ -105,3 +122,38 @@ def discover_folder_sources(
             result.supported.append(path)
 
     return result
+
+
+def analyze_discovery(
+    discovery: FolderDiscovery,
+    *,
+    registry: AdapterRegistry | None = None,
+    continue_on_error: bool = True,
+) -> FolderAnalysis:
+    """Harvest discovered sources while isolating failures to individual files."""
+    registry = registry or default_registry()
+    universe = ContentUniverse()
+    failures: dict[str, str] = {}
+
+    for source in discovery.supported:
+        try:
+            result = registry.harvest(source)
+        except Exception as exc:
+            if not continue_on_error:
+                raise
+            failures[str(source)] = f"{type(exc).__name__}: {exc}"
+            universe.warnings.append(f"Failed to analyze {source}: {type(exc).__name__}: {exc}")
+            continue
+        universe.ingest_harvest(result)
+
+    finalize_universe(universe)
+    universe.metadata["folder_discovery"] = {
+        "root": str(discovery.root),
+        "supported_count": len(discovery.supported),
+        "unsupported_count": len(discovery.unsupported),
+        "skipped_count": len(discovery.skipped),
+        "failure_count": len(failures),
+    }
+    if discovery.unsupported:
+        universe.warnings.append(f"Ignored {len(discovery.unsupported)} unsupported files during folder discovery")
+    return FolderAnalysis(discovery=discovery, universe=universe, failures=failures)
