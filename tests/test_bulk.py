@@ -2,7 +2,8 @@ import json
 
 import pytest
 
-from content_universe.bulk import discover_folder_sources
+from content_universe.adapters.base import Adapter, AdapterRegistry, HarvestResult
+from content_universe.bulk import analyze_discovery, discover_folder_sources
 from content_universe.pipeline import harvest_sources
 
 
@@ -77,3 +78,39 @@ def test_discover_folder_sources_validates_inputs(tmp_path):
 
     with pytest.raises(ValueError):
         discover_folder_sources(tmp_path, max_files=0)
+
+
+class ExplodingAdapter(Adapter):
+    name = "exploding"
+
+    def supports(self, source):
+        return str(source).endswith(".boom")
+
+    def harvest(self, source):
+        raise RuntimeError("fixture explosion")
+
+
+def test_analyze_discovery_isolates_per_file_failures(tmp_path):
+    source = tmp_path / "broken.boom"
+    source.write_text("boom", encoding="utf-8")
+    registry = AdapterRegistry()
+    registry.register(ExplodingAdapter())
+
+    discovery = discover_folder_sources(tmp_path, registry=registry)
+    analysis = analyze_discovery(discovery, registry=registry)
+
+    assert analysis.discovery.supported == [source]
+    assert analysis.failures[str(source)] == "RuntimeError: fixture explosion"
+    assert analysis.universe.metadata["folder_discovery"]["failure_count"] == 1
+    assert len(analysis.universe.warnings) == 1
+
+
+def test_analyze_discovery_can_fail_fast(tmp_path):
+    source = tmp_path / "broken.boom"
+    source.write_text("boom", encoding="utf-8")
+    registry = AdapterRegistry()
+    registry.register(ExplodingAdapter())
+    discovery = discover_folder_sources(tmp_path, registry=registry)
+
+    with pytest.raises(RuntimeError, match="fixture explosion"):
+        analyze_discovery(discovery, registry=registry, continue_on_error=False)
