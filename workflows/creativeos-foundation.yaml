@@ -1,0 +1,19 @@
+version: "0.1"
+name: creativeos-foundation
+steps:
+  - id: capture
+    action: observe
+    produces: provenance_record
+  - id: author
+    action: create_prompt_manifest
+    consumes: provenance_record
+  - id: validate
+    action: validate_schema
+    consumes: prompt_manifest
+  - id: execute
+    action: provider_operation
+    status: blocked
+    note: "Requires an explicit provider adapter and user authorization."
+  - id: catalog
+    action: persist_lineage
+    consumes: execution_result

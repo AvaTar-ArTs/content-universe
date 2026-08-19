@@ -4,6 +4,14 @@ All notable project changes are recorded here. The project is still pre-1.0; arc
 
 ## Unreleased
 
+### Polyglot CreativeOS foundation
+
+- Hardened the contract package with executable tests, duplicate-node and bounding-box validation, and corrected nested Go module CI execution.
+
+- Added shared JSON Schemas for provider-neutral prompt manifests and workflow graphs.
+- Added TypeScript contract helpers, Prompt Builder browser starter, Rust indexer, Go gateway, Swift CreativeOSKit, PostgreSQL substrate, declarative workflow, and polyglot CI.
+
+
 ### Conversation and migration audit
 
 - Added `docs/CONVERSATION_SAVEPOINT_AUDIT.md`, reconstructing the Ideogram/Suno/iDeoMine/CreativeOS evolution as chronological save points and comparing each checkpoint against the repository.
