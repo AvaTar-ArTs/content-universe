@@ -1,0 +1,1 @@
+{"name":"@avatararts/creativeos-contracts","version":"0.1.0","type":"module","exports":"./src/index.mjs","scripts":{"check":"node --check src/index.mjs"} }

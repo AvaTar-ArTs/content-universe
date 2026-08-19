@@ -1,0 +1,25 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://avatararts.org/schemas/creativeos/prompt-manifest.schema.json",
+  "title":"Provider-neutral Prompt Manifest",
+  "type":"object",
+  "required":["id","version","intent","scene"],
+  "properties":{
+    "id":{"type":"string"},"version":{"type":"string"},
+    "intent":{"type":"object","required":["original"],"properties":{"original":{"type":"string"},"expanded":{"type":"string"},"operation":{"enum":["create","edit","remix","reframe","upscale","describe"]}}},
+    "scene":{"type":"object","required":["elements"],"properties":{"width":{"type":"number"},"height":{"type":"number"},"elements":{"type":"array","items":{"$ref":"#/$defs/element"}}}},
+    "style":{"type":"object","properties":{"palette":{"type":"array","items":{"type":"string"}},"keywords":{"type":"array","items":{"type":"string"}}}},
+    "lineage":{"type":"object","properties":{"parent_ids":{"type":"array","items":{"type":"string"}},"provider":{"type":"string"},"model":{"type":"string"},"seed":{"type":["integer","null"]}}},
+    "provenance":{"type":"object"}
+  },
+  "$defs":{
+    "element":{
+      "type":"object","required":["id","kind","label","bbox"],
+      "properties":{
+        "id":{"type":"string"},"kind":{"enum":["subject","character","object","background","text","logo","effect","reference"]},"label":{"type":"string"},
+        "bbox":{"type":"array","minItems":4,"maxItems":4,"items":{"type":"number","minimum":0,"maximum":1}},
+        "text":{"type":"string"},"z_index":{"type":"integer"}
+      }
+    }
+  }
+}

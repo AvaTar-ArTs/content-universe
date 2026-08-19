@@ -1,0 +1,7 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>CreativeOS Prompt Builder</title>
+<body><main><h1>CreativeOS Prompt Builder</h1><textarea id="intent" rows="5" cols="70">A creator-centered workflow constellation</textarea><button id="build">Build manifest</button><pre id="output"></pre></main>
+<script type="module">
+const out=document.querySelector("#output");
+document.querySelector("#build").onclick=()=>{out.textContent=JSON.stringify({id:"demo-manifest",version:"0.1.0",intent:{original:document.querySelector("#intent").value,operation:"create"},scene:{elements:[]},lineage:{parent_ids:[]}},null,2)};
+</script></body></html>

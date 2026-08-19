@@ -1,0 +1,41 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://avatararts.org/schemas/creativeos/workflow-graph.schema.json",
+  "title":"CreativeOS Workflow Graph",
+  "type":"object",
+  "required":["id","version","nodes","edges"],
+  "properties":{
+    "id":{"type":"string","pattern":"^[a-z0-9][a-z0-9._-]*$"},
+    "version":{"type":"string"},
+    "nodes":{"type":"array","items":{"$ref":"#/$defs/node"}},
+    "edges":{"type":"array","items":{"$ref":"#/$defs/edge"}},
+    "provenance":{"$ref":"#/$defs/provenance"}
+  },
+  "$defs":{
+    "node":{
+      "type":"object",
+      "required":["id","kind","label","status"],
+      "properties":{
+        "id":{"type":"string"},"kind":{"type":"string"},
+        "label":{"type":"string"},"description":{"type":"string"},
+        "status":{"enum":["observed","modeled","available","executed","verified","blocked"]},
+        "capabilities":{"type":"array","items":{"type":"string"}},
+        "metadata":{"type":"object"}
+      },
+      "additionalProperties":true
+    },
+    "edge":{
+      "type":"object",
+      "required":["source","verb","target"],
+      "properties":{
+        "source":{"type":"string"},"verb":{"enum":["CREATE","REFINE","AUTOMATE","SHARE","PROTECT","PUBLISH","EVALUATE","DERIVE","REFERENCES"]},
+        "target":{"type":"string"},"condition":{"type":"string"},"metadata":{"type":"object"}
+      },
+      "additionalProperties":true
+    },
+    "provenance":{
+      "type":"object",
+      "properties":{"source":{"type":"string"},"captured_at":{"type":"string","format":"date-time"},"confidence":{"type":"number","minimum":0,"maximum":1}}
+    }
+  }
+}
