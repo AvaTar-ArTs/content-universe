@@ -66,8 +66,9 @@ Useful controls:
 --include '*.json'             include glob; may be repeated
 --exclude '*-private.*'        exclude glob; may be repeated
 --max-files 5000               cap candidate files inspected
---strict                       return exit code 2 if unsupported files are found
---discovery-json scan.json     write supported/unsupported/skipped file inventory
+--strict                       fail on unsupported files or analysis errors
+--discovery-json scan.json     write supported/unsupported/skipped inventory
+--analysis-json analysis.json  write discovery, failures, and universe summary
 ```
 
 All normal universe outputs are available, so a directory can be turned into several durable products in one pass:
@@ -80,6 +81,7 @@ content-universe analyze-folder ~/Downloads/creative-exports \
   --include '*.har' \
   --exclude '*private*' \
   --discovery-json catalogs/discovery.json \
+  --analysis-json catalogs/analysis.json \
   --sqlite catalogs/content-universe.sqlite \
   --universe-json catalogs/content-universe.json \
   --jsonl catalogs/generations.jsonl \
@@ -89,7 +91,9 @@ content-universe analyze-folder ~/Downloads/creative-exports \
   --summary
 ```
 
-Unsupported files are recorded by discovery and ignored by default. `--strict` changes that behavior into a validation gate. Supported files are still harvested through the same adapter registry and normalization pipeline as `harvest` and `batch`.
+Unsupported files are recorded and ignored by default. If a file is recognized by an adapter but fails during harvest, the default bulk mode records the exception, adds a universe warning, and continues with the rest of the folder. `--strict` turns unsupported inputs or harvest failures into validation failures instead.
+
+Supported files are harvested through the same adapter registry and normalization/finalization pipeline used by the single-file and explicit-batch commands.
 
 ## `content-universe network-inventory`
 
