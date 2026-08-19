@@ -6,6 +6,8 @@ All notable project changes are recorded here. The project is still pre-1.0; arc
 
 ### Polyglot CreativeOS foundation
 
+- Hardened the contract package with executable tests, duplicate-node and bounding-box validation, and corrected nested Go module CI execution.
+
 - Added shared JSON Schemas for provider-neutral prompt manifests and workflow graphs.
 - Added TypeScript contract helpers, Prompt Builder browser starter, Rust indexer, Go gateway, Swift CreativeOSKit, PostgreSQL substrate, declarative workflow, and polyglot CI.
 

@@ -10,7 +10,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: {node-version: 22}
-      - run: node --check packages/creativeos-contracts/src/index.mjs
+      - run: npm run --prefix packages/creativeos-contracts check
+      - run: npm run --prefix packages/creativeos-contracts test
+      - run: python -m json.tool schemas/creativeos/prompt-manifest.schema.json >/dev/null
+      - run: python -m json.tool schemas/creativeos/workflow-graph.schema.json >/dev/null
   rust:
     runs-on: ubuntu-latest
     steps:
@@ -23,7 +26,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with: {go-version: "1.22"}
-      - run: go test ./services/gateway-go/...
+      - run: go test ./...
+        working-directory: services/gateway-go
+  swift:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: swift build
+        working-directory: clients/CreativeOSKit
   python:
     runs-on: ubuntu-latest
     steps:

@@ -3,9 +3,15 @@ export const VERBS = ["CREATE","REFINE","AUTOMATE","SHARE","PROTECT","PUBLISH","
 export const OPERATIONS = ["create","edit","remix","reframe","upscale","describe"];
 
 export function assertWorkflowGraph(graph) {
-  if (!graph || typeof graph.id !== "string") throw new Error("workflow graph requires id");
-  const ids = new Set((graph.nodes ?? []).map(n => n.id));
+  if (!graph || typeof graph.id !== "string" || typeof graph.version !== "string") {
+    throw new Error("workflow graph requires id and version");
+  }
+  const ids = new Set();
   for (const node of graph.nodes ?? []) {
+    if (!node || typeof node.id !== "string" || ids.has(node.id)) {
+      throw new Error("workflow graph contains a missing or duplicate node id");
+    }
+    ids.add(node.id);
     if (!STATUSES.includes(node.status)) throw new Error(`invalid node status: ${node.status}`);
   }
   for (const edge of graph.edges ?? []) {
@@ -16,10 +22,16 @@ export function assertWorkflowGraph(graph) {
 }
 
 export function normalizeBBox([yMin,xMin,yMax,xMax]) {
+  if (![yMin,xMin,yMax,xMax].every(Number.isFinite) || yMax < yMin || xMax < xMin) {
+    throw new Error("invalid Ideogram bbox");
+  }
   return {x:xMin,y:yMin,width:xMax-xMin,height:yMax-yMin};
 }
 
 export function toIdeogramBBox({x,y,width,height}) {
+  if (![x,y,width,height].every(Number.isFinite) || width < 0 || height < 0) {
+    throw new Error("invalid neutral bbox");
+  }
   return [y,x,y+height,x+width];
 }
 

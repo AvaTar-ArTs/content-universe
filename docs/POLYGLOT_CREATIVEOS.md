@@ -39,9 +39,12 @@ All durable interoperability starts with `schemas/creativeos/*.schema.json`. Imp
 
 ```bash
 python -m pytest
-node --check packages/creativeos-contracts/src/index.mjs
+npm run --prefix packages/creativeos-contracts check
+npm run --prefix packages/creativeos-contracts test
+python -m json.tool schemas/creativeos/prompt-manifest.schema.json >/dev/null
 cargo check --manifest-path services/indexer-rs/Cargo.toml
-go test ./services/gateway-go/...
+(cd services/gateway-go && go test ./...)
+(cd clients/CreativeOSKit && swift build)
 ```
 
 The starter services are deliberately dependency-light. They establish boundaries that can later connect to the existing Python catalog and MCP server.
