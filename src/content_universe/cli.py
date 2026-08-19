@@ -8,6 +8,7 @@ from .adapters import default_registry
 from .adapters.ideogram.assets import manifest_from_records, write_manifest
 from .adapters.ideogram.models import filter_models, model_records
 from .audit import audit_records
+from .bulk import discover_folder_sources
 from .dataset_pack import build_dataset_pack
 from .exporters import export_csv, export_json, export_jsonl
 from .fts import rebuild_fts
@@ -45,6 +46,16 @@ def build_parser() -> argparse.ArgumentParser:
     batch.add_argument("--manifest", action="append", default=[], help="merge a TOML/JSON creative-universe manifest")
     batch.add_argument("--ignore-unsupported", action="store_true")
     _add_universe_outputs(batch)
+
+    folder = sub.add_parser("analyze-folder", help="Discover and analyze every supported source in a folder")
+    folder.add_argument("folder")
+    folder.add_argument("--no-recursive", action="store_true", help="only inspect direct children of the folder")
+    folder.add_argument("--include", action="append", default=[], help="glob pattern to include; may be repeated")
+    folder.add_argument("--exclude", action="append", default=[], help="glob pattern to exclude; may be repeated")
+    folder.add_argument("--max-files", type=int, help="maximum number of candidate files to inspect")
+    folder.add_argument("--strict", action="store_true", help="fail when any discovered file is unsupported")
+    folder.add_argument("--discovery-json", help="write supported/unsupported/skipped discovery details as JSON")
+    _add_universe_outputs(folder)
 
     sub.add_parser("adapters", help="List registered adapters")
 
@@ -141,6 +152,35 @@ def main() -> int:
         universe = harvest_sources(args.sources, registry=registry, ignore_unsupported=args.ignore_unsupported)
         for manifest_path in args.manifest:
             merge_universes(universe, universe_from_manifest(manifest_path))
+        _emit_universe(universe, args)
+        return 0
+
+    if args.command == "analyze-folder":
+        discovery = discover_folder_sources(
+            args.folder,
+            registry=registry,
+            recursive=not args.no_recursive,
+            include=args.include,
+            exclude=args.exclude,
+            max_files=args.max_files,
+        )
+        if args.discovery_json:
+            Path(args.discovery_json).write_text(
+                json.dumps(discovery.to_dict(), indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
+        if args.strict and discovery.unsupported:
+            print(json.dumps(discovery.to_dict(), indent=2, ensure_ascii=False))
+            return 2
+        universe = harvest_sources(discovery.supported, registry=registry, ignore_unsupported=False)
+        universe.metadata["folder_discovery"] = {
+            "root": str(discovery.root),
+            "supported_count": len(discovery.supported),
+            "unsupported_count": len(discovery.unsupported),
+            "skipped_count": len(discovery.skipped),
+        }
+        if discovery.unsupported:
+            universe.warnings.append(f"Ignored {len(discovery.unsupported)} unsupported files during folder discovery")
         _emit_universe(universe, args)
         return 0
 
