@@ -8,7 +8,7 @@ from .adapters import default_registry
 from .adapters.ideogram.assets import manifest_from_records, write_manifest
 from .adapters.ideogram.models import filter_models, model_records
 from .audit import audit_records
-from .bulk import discover_folder_sources
+from .bulk import analyze_discovery, discover_folder_sources
 from .dataset_pack import build_dataset_pack
 from .exporters import export_csv, export_json, export_jsonl
 from .fts import rebuild_fts
@@ -53,8 +53,9 @@ def build_parser() -> argparse.ArgumentParser:
     folder.add_argument("--include", action="append", default=[], help="glob pattern to include; may be repeated")
     folder.add_argument("--exclude", action="append", default=[], help="glob pattern to exclude; may be repeated")
     folder.add_argument("--max-files", type=int, help="maximum number of candidate files to inspect")
-    folder.add_argument("--strict", action="store_true", help="fail when any discovered file is unsupported")
+    folder.add_argument("--strict", action="store_true", help="fail on unsupported files or per-file analysis errors")
     folder.add_argument("--discovery-json", help="write supported/unsupported/skipped discovery details as JSON")
+    folder.add_argument("--analysis-json", help="write discovery, failures, and universe summary as JSON")
     _add_universe_outputs(folder)
 
     sub.add_parser("adapters", help="List registered adapters")
@@ -169,19 +170,16 @@ def main() -> int:
                 json.dumps(discovery.to_dict(), indent=2, ensure_ascii=False),
                 encoding="utf-8",
             )
+        analysis = analyze_discovery(discovery, registry=registry, continue_on_error=not args.strict)
+        if args.analysis_json:
+            Path(args.analysis_json).write_text(
+                json.dumps(analysis.to_dict(), indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
         if args.strict and discovery.unsupported:
-            print(json.dumps(discovery.to_dict(), indent=2, ensure_ascii=False))
+            print(json.dumps(analysis.to_dict(), indent=2, ensure_ascii=False))
             return 2
-        universe = harvest_sources(discovery.supported, registry=registry, ignore_unsupported=False)
-        universe.metadata["folder_discovery"] = {
-            "root": str(discovery.root),
-            "supported_count": len(discovery.supported),
-            "unsupported_count": len(discovery.unsupported),
-            "skipped_count": len(discovery.skipped),
-        }
-        if discovery.unsupported:
-            universe.warnings.append(f"Ignored {len(discovery.unsupported)} unsupported files during folder discovery")
-        _emit_universe(universe, args)
+        _emit_universe(analysis.universe, args)
         return 0
 
     if args.command == "audit":
