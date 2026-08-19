@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from content_universe.adapters.base import Adapter, AdapterRegistry, HarvestResult
+from content_universe.adapters.base import Adapter, AdapterRegistry
 from content_universe.bulk import analyze_discovery, discover_folder_sources
 from content_universe.pipeline import harvest_sources
 
