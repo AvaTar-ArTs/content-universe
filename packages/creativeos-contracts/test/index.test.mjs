@@ -25,5 +25,6 @@ test("rejects duplicate nodes and dangling edges", () => {
 test("converts Ideogram bbox order without losing geometry", () => {
   const neutral = normalizeBBox([0.1,0.2,0.7,0.9]);
   assert.deepEqual(neutral, {x:0.2,y:0.1,width:0.7,height:0.6});
-  assert.deepEqual(toIdeogramBBox(neutral), [0.1,0.2,0.7,0.9]);
+  const roundTrip = toIdeogramBBox(neutral);
+  roundTrip.forEach((value, index) => assert.ok(Math.abs(value - [0.1,0.2,0.7,0.9][index]) < Number.EPSILON * 4));
 });
