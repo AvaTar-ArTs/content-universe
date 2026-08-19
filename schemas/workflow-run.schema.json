@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://avatararts.org/schemas/content-universe/workflow-run.schema.json",
+  "title": "Content Universe Workflow Run",
+  "type": "object",
+  "required": ["workflow_run_id", "workflow_name", "status"],
+  "properties": {
+    "workflow_run_id": {"type": "string", "minLength": 1},
+    "workflow_name": {"type": "string", "minLength": 1},
+    "status": {
+      "enum": ["planned", "running", "blocked", "partial", "completed", "failed", "cancelled"]
+    },
+    "parent_run_id": {"type": ["string", "null"]},
+    "skill_invocations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["invocation_id", "skill_name"],
+        "properties": {
+          "invocation_id": {"type": "string"},
+          "skill_name": {"type": "string"},
+          "skill_version": {"type": ["string", "null"]},
+          "semantic_capability": {"type": ["string", "null"]},
+          "selected_workflow": {"type": ["string", "null"]},
+          "tool_or_mcp": {"type": ["string", "null"]},
+          "provider_or_backend": {"type": ["string", "null"]},
+          "inputs": {"type": "array", "items": {"$ref": "#/$defs/entity_ref"}},
+          "outputs": {"type": "array", "items": {"$ref": "#/$defs/entity_ref"}},
+          "metadata": {"type": "object"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "handoff_ids": {"type": "array", "items": {"type": "string"}},
+    "checkpoint_ids": {"type": "array", "items": {"type": "string"}},
+    "provider_job_ids": {"type": "array", "items": {"type": "string"}},
+    "verification_ids": {"type": "array", "items": {"type": "string"}},
+    "inputs": {"type": "array", "items": {"$ref": "#/$defs/entity_ref"}},
+    "outputs": {"type": "array", "items": {"$ref": "#/$defs/entity_ref"}},
+    "metadata": {"type": "object"}
+  },
+  "$defs": {
+    "entity_ref": {
+      "type": "object",
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "id": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
