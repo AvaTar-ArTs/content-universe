@@ -39,6 +39,62 @@ content-universe harvest ideogram.ai-avatararts.har \
   --mermaid catalogs/avatararts.mmd
 ```
 
+## `content-universe batch`
+
+Harvest explicit source paths into one merged Content Universe.
+
+```bash
+content-universe batch capture-1.har export.json songs.csv --summary
+```
+
+Use `--ignore-unsupported` when a manually supplied list can contain files that no adapter recognizes.
+
+## `content-universe analyze-folder`
+
+Bulk-discover and analyze every source in a folder that a registered adapter recognizes. Discovery is adapter-driven, so new adapters automatically participate without maintaining a hard-coded extension list.
+
+```bash
+content-universe analyze-folder ~/Downloads/creative-exports --summary
+```
+
+By default the command walks subdirectories recursively and skips common dependency/build folders such as `.git`, `node_modules`, `.venv`, `dist`, and `build`.
+
+Useful controls:
+
+```text
+--no-recursive                 only inspect direct child files
+--include '*.json'             include glob; may be repeated
+--exclude '*-private.*'        exclude glob; may be repeated
+--max-files 5000               cap candidate files inspected
+--strict                       fail on unsupported files or analysis errors
+--discovery-json scan.json     write supported/unsupported/skipped inventory
+--analysis-json analysis.json  write discovery, failures, and universe summary
+```
+
+All normal universe outputs are available, so a directory can be turned into several durable products in one pass:
+
+```bash
+content-universe analyze-folder ~/Downloads/creative-exports \
+  --include '*.json' \
+  --include '*.html' \
+  --include '*.csv' \
+  --include '*.har' \
+  --exclude '*private*' \
+  --discovery-json catalogs/discovery.json \
+  --analysis-json catalogs/analysis.json \
+  --sqlite catalogs/content-universe.sqlite \
+  --universe-json catalogs/content-universe.json \
+  --jsonl catalogs/generations.jsonl \
+  --asset-manifest catalogs/assets.json \
+  --mermaid catalogs/lineage.mmd \
+  --pack catalogs/content-universe.zip \
+  --summary
+```
+
+Unsupported files are recorded and ignored by default. If a file is recognized by an adapter but fails during harvest, the default bulk mode records the exception, adds a universe warning, and continues with the rest of the folder. `--strict` turns unsupported inputs or harvest failures into validation failures instead.
+
+Supported files are harvested through the same adapter registry and normalization/finalization pipeline used by the single-file and explicit-batch commands.
+
 ## `content-universe network-inventory`
 
 Build a query-string-free endpoint inventory from a HAR without replaying requests.
